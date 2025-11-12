@@ -179,70 +179,7 @@ def linear_regression():
 
 
 
-fig1, axes = plt.subplots(1, 3, figsize=(10,5))
 
-axes[0].title.set_text('Original')
-make_grid(axes[0], 10)
-axes[0].axhline(0, color='black')
-axes[0].axvline(0, color='black')
-axes[0].set_ylim(-10,10)
-axes[0].set_xlim(-10,10)
-
-axes[1].title.set_text('Transformed')
-make_grid(axes[1], 10)
-axes[1].axhline(0, color='black')
-axes[1].axvline(0, color='black')
-axes[1].set_ylim(-10,10)
-axes[1].set_xlim(-10,10)
-
-
-
-
-dataset = np.array([[1,2],
-                    [4,5],
-                    [7,8],
-                    [2,6],
-                    [8,3]])
-
-
-
-ys = leastsquares(dataset)
-plotdataset(axes[0], dataset)
-axes[1].scatter(dataset[:,0], ys)
-axes[0].plot(dataset[:,0], ys)
-axes[1].plot(dataset[:,0], ys)
-
-
-
-
-axes[2].title.set_text('Distribution')
-axes[2].axhline(0, color='black')
-axes[2].set_ylim(-1,1)
-axes[2].set_xlim(-7,30)
-axes[2].axhline(0, color='black')
-
-"""
-figure = plt.figure()
-ax = figure.add_subplot(111, projection='3d')
-w = np.linspace(-5,5,50)
-b = np.linspace(-5,5,50)
-
-W ,B = np.meshgrid(w,b)
-J = W**2 + B**2
-abc, j = linear_regression()
-ax.plot_surface(W, B, j, cmap='viridis', alpha=0.7)
-
-# Example path (a simple straight line for illustration)
-path_w = np.array([4, 2, 1, 0.5, 0])
-path_b = np.array([4, 2, 1, 0.5, 0])
-path_J = path_w**2 + path_b**2
-
-ax.plot(path_w, path_b, path_J, color='red', marker='o', label='gradient path')
-"""
-
-fig, ax = plt.subplot(1, 1, figsize=(10,5))
-ax = plt.axes(projection="3d")
-ax.scatter(1,2,3);
 
 
 plt.show()
