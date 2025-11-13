@@ -77,9 +77,7 @@ def gradient_descent(function, derivative, lr= 0.01, maxiter=100):
 
 
 
-def centerdataset(dataset):
-    center = dataset - np.mean(dataset, axis=0)
-    return center
+
 
 
 
@@ -97,29 +95,8 @@ def plotdataset(axis, dataset, color='red'):
 
 
 
-def eigendecomposition(dataset):
-    return np.linalg.eig(dataset)
 
 
-
-
-def PCA(dataset, num_components=1):
-    mean = np.mean(dataset, axis=0)
-    center = centerdataset(dataset)
-    C = covarience(center)
-    eigenval, eigenvec = eigendecomposition(C)
-    norms = np.linalg.norm(eigenvec)
-    accuracy = eigenval/np.sum(eigenval)
-
-    idx = np.argsort(eigenval)[::-1]
-    eigenvalues = eigenval[idx]
-    eigenvectors = eigenvec[:, idx]
-
-    V_k = eigenvectors[:, :num_components]
-
-    pca = center @ V_k
-
-    return pca, center, mean, V_k, eigenvectors, eigenvalues
 
 
 
@@ -176,7 +153,82 @@ def linear_regression():
     return X, J
 
 
+def EIGEN_DECOMPOSITION(dataset):
+    return np.linalg.eig(dataset)
 
+def CENTER_DATA(dataset):
+    center = dataset - np.mean(dataset)
+    return center
+
+
+def PCA(dataset, top_k):
+    original_dataset = dataset
+    
+    centered_data = CENTER_DATA(dataset)
+
+    covarience_matrix = centered_data.T @ centered_data
+
+    eigenvalues, eigenvectors = EIGEN_DECOMPOSITION(covarience_matrix)
+
+    accuracy = np.array([(eigenvalues/np.sum(eigenvalues))*100])
+
+    sorted_indices = np.flip(np.argsort(eigenvalues))
+    
+    V_sorted = eigenvectors[: , sorted_indices]
+
+    top_V = V_sorted[:, :top_k]
+
+    PCA_data = centered_data @ top_V
+    
+
+    
+
+    return accuracy, PCA_data
+
+
+# Dataset for PCA
+dataset = np.array([[7,5,4],
+                    [3,6,9],
+                    [1,6,2],
+                    [7,3,2],
+                    [5,2,3],
+                    [5,2,4],
+                    [1,7,4],
+                    [3,5,4]])
+
+# Accuracy of principal components / data points after PCA
+accuracy, points = PCA(dataset,2)
+
+
+fig = plt.figure(figsize=(12,5))
+
+ax_3d = fig.add_subplot(1, 2, 2, projection='3d')
+ax_2d = fig.add_subplot(1, 2, 1)
+
+
+ax_3d.set_xlim(10)
+ax_3d.set_ylim(10)
+ax_3d.set_zlim(10)
+ax_3d.scatter(dataset[:, 0], dataset[:,1], dataset[:,2])
+ax_3d.set_title('Data before PCA')
+
+
+ax_2d.set_xlim(-6, 6)
+ax_2d.set_xlabel('PC1')
+ax_2d.set_ylim(-6, 6)
+ax_2d.set_ylabel('PC2')
+ax_2d.axvline(color ='gray', alpha = 0.5)
+ax_2d.axhline(color ='gray', alpha = 0.5)
+ax_2d.scatter(points[:, 0], points[:, 1], color = 'tan')
+ax_2d.set_title('Data after PCA')
+
+
+
+
+
+
+
+print(PCA(dataset,2))
 
 
 
